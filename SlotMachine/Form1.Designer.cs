@@ -58,7 +58,7 @@
             // button1
             // 
             this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 35F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.button1.Location = new System.Drawing.Point(50, 276);
+            this.button1.Location = new System.Drawing.Point(199, 299);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(234, 66);
             this.button1.TabIndex = 0;
@@ -133,7 +133,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label4.Location = new System.Drawing.Point(310, 296);
+            this.label4.Location = new System.Drawing.Point(15, 416);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(166, 29);
             this.label4.TabIndex = 4;
@@ -143,35 +143,37 @@
             // 
             this.numericUpDown1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.numericUpDown1.Increment = new decimal(new int[] {
-            5,
+            25,
             0,
             0,
             0});
-            this.numericUpDown1.Location = new System.Drawing.Point(454, 360);
+            this.numericUpDown1.Location = new System.Drawing.Point(491, 421);
             this.numericUpDown1.Maximum = new decimal(new int[] {
-            50,
+            1000,
             0,
             0,
             0});
             this.numericUpDown1.Minimum = new decimal(new int[] {
-            5,
+            25,
             0,
             0,
             0});
             this.numericUpDown1.Name = "numericUpDown1";
-            this.numericUpDown1.Size = new System.Drawing.Size(44, 26);
+            this.numericUpDown1.Size = new System.Drawing.Size(64, 26);
             this.numericUpDown1.TabIndex = 5;
+            this.numericUpDown1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.numericUpDown1.Value = new decimal(new int[] {
-            5,
+            25,
             0,
             0,
             0});
+            this.numericUpDown1.ValueChanged += new System.EventHandler(this.numericUpDown1_ValueChanged);
             // 
             // label5
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label5.Location = new System.Drawing.Point(310, 362);
+            this.label5.Location = new System.Drawing.Point(450, 391);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(138, 20);
             this.label5.TabIndex = 6;
@@ -181,7 +183,7 @@
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label6.Location = new System.Drawing.Point(310, 398);
+            this.label6.Location = new System.Drawing.Point(233, 368);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(168, 20);
             this.label6.TabIndex = 7;
@@ -190,7 +192,7 @@
             // button2
             // 
             this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.button2.Location = new System.Drawing.Point(50, 362);
+            this.button2.Location = new System.Drawing.Point(199, 391);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(234, 56);
             this.button2.TabIndex = 8;
@@ -203,7 +205,7 @@
             this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Segoe UI", 48F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label7.Location = new System.Drawing.Point(5, 9);
+            this.label7.Location = new System.Drawing.Point(5, 20);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(593, 86);
             this.label7.TabIndex = 12;
@@ -212,9 +214,9 @@
             // 
             // pictureBox3
             // 
-            this.pictureBox3.Image = global::SlotMachine.Properties.Resources._default;
+            this.pictureBox3.Image = global::SlotMachine.Properties.Resources.seven;
             this.pictureBox3.InitialImage = null;
-            this.pictureBox3.Location = new System.Drawing.Point(402, 115);
+            this.pictureBox3.Location = new System.Drawing.Point(402, 150);
             this.pictureBox3.Name = "pictureBox3";
             this.pictureBox3.Size = new System.Drawing.Size(96, 96);
             this.pictureBox3.TabIndex = 11;
@@ -222,9 +224,9 @@
             // 
             // pictureBox2
             // 
-            this.pictureBox2.Image = global::SlotMachine.Properties.Resources._default;
+            this.pictureBox2.Image = global::SlotMachine.Properties.Resources.seven;
             this.pictureBox2.InitialImage = null;
-            this.pictureBox2.Location = new System.Drawing.Point(263, 115);
+            this.pictureBox2.Location = new System.Drawing.Point(263, 150);
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.Size = new System.Drawing.Size(96, 96);
             this.pictureBox2.TabIndex = 10;
@@ -234,9 +236,9 @@
             // pictureBox1
             // 
             this.pictureBox1.ErrorImage = null;
-            this.pictureBox1.Image = global::SlotMachine.Properties.Resources._default;
+            this.pictureBox1.Image = global::SlotMachine.Properties.Resources.seven;
             this.pictureBox1.InitialImage = null;
-            this.pictureBox1.Location = new System.Drawing.Point(111, 115);
+            this.pictureBox1.Location = new System.Drawing.Point(111, 150);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(96, 96);
             this.pictureBox1.TabIndex = 9;
@@ -246,6 +248,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoSize = true;
             this.BackColor = System.Drawing.SystemColors.ButtonHighlight;
             this.ClientSize = new System.Drawing.Size(604, 462);
             this.Controls.Add(this.label7);

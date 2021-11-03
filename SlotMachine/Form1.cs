@@ -22,6 +22,7 @@ namespace SlotMachine
         Image seven = Properties.Resources.seven;
         int secret = 0;
         int secret_enabled = 0;
+        int wins = 0;
         SoundPlayer sound = new SoundPlayer();
         SoundPlayer loop = new SoundPlayer();
         int balance = 100; //Исходный баланс.
@@ -29,6 +30,9 @@ namespace SlotMachine
         int counter_try = 0; //Счетчик попыток.
         int win_money = 0; //Выигранные деньги.
         bool IsActive = true; //Активность кнопки "Погнали!"
+        Random random = new Random();
+        int attract;
+        int lost = 0;
         public Form1()
         {
             InitializeComponent();
@@ -36,8 +40,13 @@ namespace SlotMachine
         }
         public void dvg1_Tick(object sender, EventArgs e)
         {
-            Random random = new Random(); //Создаем экземпляр класса Random
-            int dvg = random.Next(8); // Получаем случайное число от 0-7
+            int dvg;
+            if (balance <= 100) dvg = random.Next(8); // Получаем случайное число от 0-7
+            else dvg = random.Next(100) % 8;
+            if (attract > 0)
+            {
+                dvg = dvg % 5;
+            }
             label1.Text = dvg.ToString(); //Выводим полученное число
             switch (dvg)
             {
@@ -69,8 +78,13 @@ namespace SlotMachine
         }
         public void dvg2_Tick(object sender, EventArgs e)
         {
-            Random random = new Random();
-            int dvg = random.Next(8);
+            int dvg;
+            if (balance <= 100 || wins == 0) dvg = random.Next(8); // Получаем случайное число от 0-7
+            else dvg = (random.Next(100) - wins) % 8;
+            if (attract > 0)
+            {
+                dvg = dvg % 5;
+            }
             label2.Text = dvg.ToString();
             switch (dvg)
             {
@@ -102,8 +116,14 @@ namespace SlotMachine
         }
         public void dvg3_Tick(object sender, EventArgs e)
         {
-            Random random = new Random();
-            int dvg = random.Next(8);
+            int dvg;
+            if (balance <= 100) dvg = random.Next(8); // Получаем случайное число от 0-7
+            else dvg = random.Next(100) % 7 + 1;
+            if (attract > 0)
+            {
+                attract--;
+                dvg = dvg % 5;
+            }
             label3.Text = dvg.ToString();
             switch (dvg)
             {
@@ -135,19 +155,19 @@ namespace SlotMachine
         }
         private void button1_Click(object sender, EventArgs e)
         {
-            sound.Stream = Properties.Resources.play;
-            sound.PlaySync();
-            loop.Stream = Properties.Resources.tick;
-            loop.PlayLooping();
-            //активируем таймеры
-            dvg1.Enabled = true;
-            dvg2.Enabled = true;
-            dvg3.Enabled = true;
-            stop1.Enabled = true;
-            stop2.Enabled = true;
-            stop3.Enabled = true;
-            IsActive = true;
-            button1.Enabled = false; //Пока барабаны крутятся кнопка "Погнали!"  заблокирована.
+                sound.Stream = Properties.Resources.play;
+                sound.PlaySync();
+                loop.Stream = Properties.Resources.tick;
+                loop.PlayLooping();
+                //активируем таймеры
+                dvg1.Enabled = true;
+                dvg2.Enabled = true;
+                dvg3.Enabled = true;
+                stop1.Enabled = true;
+                stop2.Enabled = true;
+                stop3.Enabled = true;
+                IsActive = true;
+                button1.Enabled = false; //Пока барабаны крутятся кнопка "Погнали!"  заблокирована.}
         }
         private void stop1_Tick(object sender, EventArgs e)
         {
@@ -171,6 +191,7 @@ namespace SlotMachine
         }
         private void stop3_Tick(object sender, EventArgs e)
         {
+            counter_try--;
             loop.Stop();
             dvg3.Enabled = false;
             stop3.Enabled = false;
@@ -180,21 +201,45 @@ namespace SlotMachine
                 pictureBox3.Image = Properties.Resources.seven;
             }
             loop.Stop();
-            counter_try--; //Уменьшаем число попыток.
+            
             Win_Money();
             if (IsActive)
             {
+                if (balance < 100) lost++;
+                if (lost == 3 && balance <= 50)
+                {
+                    attract = random.Next(2, 4);
+                }
                 if (counter_try != 0) //Если число попыток больше 0, то даем возможность нажать на кнопку "Погнали!" еще раз, если нет, то блокируем кнопку "Погнали!", и выводим информационное окно.
                 {
+
                     label6.Text = "Осталось попыток: " + counter_try;
                     button1.Enabled = true;
                 }
-                else
+                else if(balance > 0 )
                 {
                     label6.Text = "Осталось попыток: " + counter_try;
                     MessageBox.Show("Делайте новую ставку!", "Попытки закончились...", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    button2.Enabled = true;
+                    if (numericUpDown1.Value < balance) { button2.Enabled = true; }
+
                 }
+                else
+                {
+                    DialogResult gameover = MessageBox.Show("Нажмите на ОК, чтобы продать свою душу за $100", "Игра окончена...", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    if (gameover == DialogResult.OK)
+                    {
+                        numericUpDown1.Value = 25;
+                        balance = 100;
+                        button1.Text = "Погнали!";
+                        label4.Text = "Баланс: $" + balance;
+                        label6.Text = "Осталось попыток: 0";
+                        button2.Enabled = true;
+                    }
+                }
+            }
+            if(counter_try > 0)
+            {
+                button1.PerformClick();
             }
         }
         private void Init_Counter(decimal counter)
@@ -202,34 +247,36 @@ namespace SlotMachine
             counter_money = Convert.ToInt32(counter);
             balance = balance - counter_money;
             label4.Text = "Баланс: $" + balance;
-            counter_try = 5;
+            counter_try = (int)numericUpDown1.Value / 25;
+            if (counter_try > 1) button1.Text = "Автоигра!";
+            else button1.Text = "Погнали!";
             label6.Text = "Осталось попыток: " + counter_try;
         }
 
         private void Win_Money()
         {
             if (label1.Text == "0" && label2.Text == "0" && label3.Text == "0") Upd_Win_Money(17);
+            else if ((label1.Text == "0" && label2.Text == "0") || (label2.Text == "0" && label3.Text == "0")) Upd_Win_Money(7);
             if (label1.Text == "1" && label2.Text == "1" && label3.Text == "1") Upd_Win_Money(10);
+            else if ((label1.Text == "1" && label2.Text == "1") || (label2.Text == "1" && label3.Text == "1")) Upd_Win_Money(1);
             if (label1.Text == "2" && label2.Text == "2" && label3.Text == "2") Upd_Win_Money(11);
+            else if ((label1.Text == "2" && label2.Text == "2") || (label2.Text == "2" && label3.Text == "2")) Upd_Win_Money(2);
             if (label1.Text == "3" && label2.Text == "3" && label3.Text == "3") Upd_Win_Money(12);
+            else if ((label1.Text == "3" && label2.Text == "3") || (label2.Text == "3" && label3.Text == "3")) Upd_Win_Money(3);
             if (label1.Text == "4" && label2.Text == "4" && label3.Text == "4") Upd_Win_Money(13);
+            else if ((label1.Text == "4" && label2.Text == "4") || (label2.Text == "4" && label3.Text == "4")) Upd_Win_Money(4);
             if (label1.Text == "5" && label2.Text == "5" && label3.Text == "5") Upd_Win_Money(14);
+            else if ((label1.Text == "5" && label2.Text == "5") || (label2.Text == "5" && label3.Text == "5")) Upd_Win_Money(5);
             if (label1.Text == "6" && label2.Text == "6" && label3.Text == "6") Upd_Win_Money(15);
+            else if ((label1.Text == "6" && label2.Text == "6") || (label2.Text == "6" && label3.Text == "6")) Upd_Win_Money(6);
             if (label1.Text == "7" && label2.Text == "7" && label3.Text == "7") Upd_Win_Money(20);
-            else
-            {
-                if ((label1.Text == "7" && label2.Text == "7") || (label2.Text == "7" && label3.Text == "7")) Upd_Win_Money(10);
-            }
-            if ((label1.Text == "0" && label2.Text == "0") || (label2.Text == "0" && label3.Text == "0")) Upd_Win_Money(7);
-            if ((label1.Text == "1" && label2.Text == "1") || (label2.Text == "1" && label3.Text == "1")) Upd_Win_Money(1);
-            if ((label1.Text == "2" && label2.Text == "2") || (label2.Text == "2" && label3.Text == "2")) Upd_Win_Money(2);
-            if ((label1.Text == "3" && label2.Text == "3") || (label2.Text == "3" && label3.Text == "3")) Upd_Win_Money(3);
-            if ((label1.Text == "4" && label2.Text == "4") || (label2.Text == "4" && label3.Text == "4")) Upd_Win_Money(4);
-            if ((label1.Text == "5" && label2.Text == "5") || (label2.Text == "5" && label3.Text == "5")) Upd_Win_Money(5);
-            if ((label1.Text == "6" && label2.Text == "6") || (label2.Text == "6" && label3.Text == "6")) Upd_Win_Money(6);
+            else if ((label1.Text == "7" && label2.Text == "7") || (label2.Text == "7" && label3.Text == "7")) Upd_Win_Money(10);
         }
         private void Upd_Win_Money(int number)
         {
+            wins++;
+            lost = 0;
+            attract = 0;
             if (number == 20)
             {
                 sound.Stream = Properties.Resources.jackpot;
@@ -255,7 +302,7 @@ namespace SlotMachine
                 balance = balance + win_money; //Прибавляем выигрыш к балансу
                 label4.Text = "Баланс: $" + balance; //Выводим обновленный балансе
                 button1.Enabled = false; //Блокируем кнопку "Погнали!"
-                button2.Enabled = true; //Открываем кнопку "Сделать ставку"
+                if (numericUpDown1.Value <= balance) { button2.Enabled = true;}
                 IsActive = false; //Это костыль, может кто-то предложит как от него отказаться ))
                 if (result == DialogResult.OK)
                 {
@@ -291,9 +338,16 @@ namespace SlotMachine
             }
         }
 
+        private void numericUpDown1_ValueChanged(object sender, EventArgs e)
+        {
+            numericUpDown1.Value -= numericUpDown1.Value % 25;
+            if (numericUpDown1.Value > balance) button2.Enabled = false;
+            else if (label6.Text == "Осталось попыток: 0") button2.Enabled = true;
+        }
+
         private void Form1_Load(object sender, EventArgs e)
         {
-
+            attract = random.Next(2, 4);
         }
     }
 }
